@@ -1,0 +1,22 @@
+#!/bin/bash
+set -evu
+
+# single argument = root directory of module to test
+# Requires mypy >= 0.800
+
+MODULEDIR=$1
+
+# set MYPYPATH
+MYPYPATH="."
+for MOD in $(ls -d "$MODULEDIR"*); do
+    MOD_PATH="$(cd "$MOD" && pwd)"
+    MYPYPATH="$MYPYPATH:$MOD_PATH"
+done
+export MYPYPATH="$MYPYPATH"
+
+set +e
+mypy --config-file=mypy.ini --no-incremental -p quantinuumqircheck -p tests
+STATUS=$?
+set -e
+
+exit $STATUS
