@@ -15,7 +15,7 @@ done
 export MYPYPATH="$MYPYPATH"
 
 set +e
-mypy --config-file=mypy.ini --no-incremental -p quantinuumqircheck -p tests
+mypy --config-file=mypy.ini --no-incremental -p quantinuum_qircheck -p tests
 STATUS=$?
 set -e
 

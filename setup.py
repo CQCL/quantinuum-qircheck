@@ -17,7 +17,7 @@ from pathlib import Path
 from setuptools import setup  # type: ignore
 
 setup(
-    name="quantinuumqircheck",
+    name="quantinuum_qircheck",
     version="0.1.0",
     author="TKET development team",
     author_email="tket-support@quantinuum.com",
@@ -31,7 +31,7 @@ setup(
     long_description=(Path(__file__).parent / "README.md").read_text(),
     long_description_content_type="text/markdown",
     license="Apache 2",
-    packages=["quantinuumqircheck"],
+    packages=["quantinuum_qircheck"],
     include_package_data=True,
     install_requires=[
         "pyqir == 0.10.6",

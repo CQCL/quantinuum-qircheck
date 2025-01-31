@@ -3,18 +3,18 @@
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://tketusers.slack.com/join/shared_invite/zt-18qmsamj9-UqQFVdkRzxnXCcKtcarLRA#)
 [![Stack Exchange](https://img.shields.io/badge/StackExchange-%23ffffff.svg?style=for-the-badge&logo=StackExchange)](https://quantumcomputing.stackexchange.com/tags/pytket)
 
-This repository contains the quantinuumqircheck package.
+This repository contains the quantinuum_qircheck package.
 
 Some useful links:
 - [API Documentation](https://tket.quantinuum.com/extensions/pytket-qir/)
 
 ## Getting started
 
-`quantinuumqircheck` is available for Python 3.10, 3.11 and 3.12, on Linux, MacOS
+`quantinuum_qircheck` is available for Python 3.10, 3.11 and 3.12, on Linux, MacOS
 and Windows. To install, run:
 
 ```shell
-pip install quantinuumqircheck
+pip install quantinuum_qircheck
 ```
 
 ## Bugs, support and feature requests

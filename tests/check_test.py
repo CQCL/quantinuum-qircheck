@@ -15,7 +15,7 @@
 
 import pytest
 
-import quantinuumqircheck as qc
+import quantinuum_qircheck as qc
 
 
 def test_check_qir_simpel() -> None:
