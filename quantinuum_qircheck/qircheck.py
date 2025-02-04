@@ -139,7 +139,7 @@ def is_classical_op(instr: pq.Instruction) -> bool:
     return isinstance(instr, pq.Instruction) and instr.opcode in op_opcodes
 
 
-class ValidationError:
+class ValidationError(ValueError):
     # pylint: disable=too-few-public-methods
     def __init__(self, instr: pq.Instruction, line_num: int):
         self.error_message = f"Encountered Unexpected Instruction {str(instr)}"
