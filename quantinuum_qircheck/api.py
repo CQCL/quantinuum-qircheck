@@ -42,6 +42,6 @@ def qircheck(qir: Union[str, bytes, pyqir.Module]) -> None:
 
     assert module.verify() is None
 
-    validate_qir_base(module)  # type: ignore
+    validate_qir_base(module)
 
     return None
