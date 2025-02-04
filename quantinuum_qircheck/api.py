@@ -23,10 +23,11 @@ import pyqir
 from .qircheck import validate_qir_base
 
 
-def qircheck(qir: Union[str, bytes, pyqir.Module]) -> bool:
+def qircheck(qir: Union[str, bytes, pyqir.Module]) -> None:
     """
     check qir if it is valid
     Allowed types are: str, bytes and pyqir.module
+    returns none, raises error in case of any problems
     """
     if isinstance(qir, str):
         module = pyqir.Module.from_ir(pyqir.Context(), qir)
@@ -41,4 +42,6 @@ def qircheck(qir: Union[str, bytes, pyqir.Module]) -> bool:
 
     assert module.verify() is None
 
-    return validate_qir_base(module)  # type: ignore
+    validate_qir_base(module)  # type: ignore
+
+    return None

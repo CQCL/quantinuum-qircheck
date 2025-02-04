@@ -17,7 +17,7 @@ check for QIR module if it is compatible with quantinuum devices
 """
 
 import re
-from typing import Callable, Union
+from typing import Callable
 
 import pyqir as pq
 
@@ -146,10 +146,10 @@ class ValidationError:
         self.line_num = line_num
 
 
-def validate_qir_base(qir_prog: pq.Module) -> bool:
+def validate_qir_base(qir_prog: pq.Module) -> None:
     """Validate that the QIR corresponds to a valid quantinuum profile
     program that we can support, allowing pytket creg functions.
-    This will return true or raises a ValidationError"""
+    This will return none and raises a ValidationError in case of issues"""
 
     def _is_valid_call_help(instr: pq.Instruction) -> bool:
         return is_valid_call(instr, qir_prog.functions)
@@ -201,7 +201,7 @@ def validate_qir_base(qir_prog: pq.Module) -> bool:
             if not any(fun(instr) for fun in fun_collection):
                 raise ValidationError(instr, line_num)
             line_num += 1
-    return True
+    return None
 
 
 def is_valid_quantum_call(instr: pq.Call) -> bool:
