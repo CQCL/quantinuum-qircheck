@@ -37,7 +37,7 @@ Then install required dependencies:
 
 ```sh
 pip install -U pip setuptools
-pip install build pre-commit pytest wheel mypy~=1.4 black~=23.7 pylint~=2.17 ruff==0.0.282
+pip install build pre-commit pytest wheel mypy~=1.4 black~=23.7 ruff==0.0.282
 pre-commit install
 ```
 
@@ -83,7 +83,6 @@ type checker and all submissions must pass its checks. You should therefore run
 
 We use [ruff](https://github.com/astral-sh/ruff) and [pylint](https://pypi.org/project/pylint/)
 on the CI to check compliance with a set of style requirements (listed in `ruff.toml` and `.pylintrc`).
-You should run `pylint` over any changed files before submitting a PR, to catch any issues.
 
 An easy way to meet all formatting and linting requirements is to issue `pre-commit run --all-files`
 or `make lint` before sending a PR.

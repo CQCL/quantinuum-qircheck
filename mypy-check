@@ -2,7 +2,6 @@
 set -evu
 
 # single argument = root directory of module to test
-# Requires mypy >= 0.800
 
 MODULEDIR=$1
 

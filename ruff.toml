@@ -38,5 +38,4 @@ select = [
 ]
 
 [per-file-ignores]
-".github/workflows/docs/conf.py"  = ["E402"]
 "__init__.py"                     = ["F401"]    # module imported but unused (6)
