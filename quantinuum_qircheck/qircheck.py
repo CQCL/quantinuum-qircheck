@@ -156,29 +156,24 @@ def validate_qir_base(qir_prog: pq.Module) -> None:
 
     if not isinstance(qir_prog.functions, list):
         raise ValueError(
-            "Expected the QIR file to have at least one function but none was found",
-            -1,
+            "Expected the QIR file to have at least one function but none was found"
         )
     main_fun: pq.Function = next(filter(pq.is_entry_point, qir_prog.functions))
     if not main_fun:
         raise ValueError(
-            "Expected the QIR file to have an entrypoint function "
-            "but none was found",
-            -1,
+            "Expected the QIR file to have an entrypoint function " "but none was found"
         )
     num_qubits = pq.required_num_qubits(main_fun)
     if not isinstance(num_qubits, int):
         raise ValueError(
             "Expected the QIR file to have qubit count specified "
-            "but no annotation was found",
-            -1,
+            "but no annotation was found"
         )
     num_results = pq.required_num_results(main_fun)
     if not isinstance(num_results, int):
         raise ValueError(
             "Expected the QIR file to have measurement result count "
-            "specified but no annotation was found",
-            -1,
+            "specified but no annotation was found"
         )
 
     line_num = 1
