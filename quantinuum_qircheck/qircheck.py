@@ -146,9 +146,10 @@ class ValidationError:
         self.line_num = line_num
 
 
-def validate_qir_base(qir_prog: pq.Module) -> Union[bool, ValidationError]:
+def validate_qir_base(qir_prog: pq.Module) -> bool:
     """Validate that the QIR corresponds to a valid quantinuum profile
-    program that we can support, allowing pytket creg functions and"""
+    program that we can support, allowing pytket creg functions.
+    This will return true or raises a ValidationError"""
 
     def _is_valid_call_help(instr: pq.Instruction) -> bool:
         return is_valid_call(instr, qir_prog.functions)
@@ -198,7 +199,7 @@ def validate_qir_base(qir_prog: pq.Module) -> Union[bool, ValidationError]:
                 is_select,
             ]
             if not any(fun(instr) for fun in fun_collection):
-                return ValidationError(instr, line_num)
+                raise ValidationError(instr, line_num)
             line_num += 1
     return True
 
