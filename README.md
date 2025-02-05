@@ -5,9 +5,6 @@
 
 This repository contains the quantinuum_qircheck package.
 
-Some useful links:
-- [API Documentation](https://tket.quantinuum.com/extensions/pytket-qir/)
-
 ## Getting started
 
 `quantinuum_qircheck` is available for Python 3.10, 3.11 and 3.12, on Linux, MacOS
