@@ -37,7 +37,7 @@ python -m pip install --upgrade pip wheel build
 # Generate and install the package
 python -m build
 for w in dist/*.whl ; do
-    python -m pip install $w
+    python -m pip install "$w[test]"
     cp $w ${ARTIFACTSDIR}
 done
 
@@ -48,8 +48,6 @@ then
 fi
 
 cd ${GITHUB_WORKSPACE}/tests
-
-python -m pip install --pre -r test-requirements.txt
 
 pytest --doctest-modules
 

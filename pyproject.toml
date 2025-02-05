@@ -46,15 +46,8 @@ dependencies = [
   "pyqir == 0.10.6",
 ]
 
-[dependency-groups]
-dev = [
-  "pytest",
-  "pytest-timeout",
-  "hypothesis",
-  "requests_mock",
-  "pytket-qir",
-
-]
+[project.optional-dependencies]
+test = ["pytest"]
 
 [project.urls]
 Repository = "https://github.com/CQCL/quantinuum-qircheck"
