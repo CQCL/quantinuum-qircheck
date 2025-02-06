@@ -158,7 +158,7 @@ def validate_qir_base(qir_prog: pq.Module) -> None:
         raise ValueError(
             "Expected the QIR file to have at least one function but none was found"
         )
-    main_fun: pq.Function = next(filter(pq.is_entry_point, qir_prog.functions))
+    main_fun = next(filter(pq.is_entry_point, qir_prog.functions), None)
     if not main_fun:
         raise ValueError(
             "Expected the QIR file to have an entrypoint function " "but none was found"

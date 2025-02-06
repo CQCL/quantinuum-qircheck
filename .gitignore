@@ -15,3 +15,6 @@ docs/extensions
 docs/pyproject.toml
 docs/poetry.lock
 wheelhouse/
+
+# jetbrains ide config
+.idea
