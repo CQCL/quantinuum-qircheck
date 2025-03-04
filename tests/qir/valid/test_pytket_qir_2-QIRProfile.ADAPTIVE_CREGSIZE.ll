@@ -16,7 +16,7 @@ declare void @__quantum__rt__int_record_output(i64, i8*)
 
 declare void @__quantum__qis__h__body(%Qubit*)
 
-attributes #0 = { "entry_point" "output_labeling_schema" "qir_profiles"="custom" "required_num_qubits"="3" "required_num_results"="3" }
+attributes #0 = { "entry_point" }
 
 !llvm.module.flags = !{!0, !1, !2, !3}
 
