@@ -43,7 +43,7 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-  "pyqir == 0.10.6",
+  "pyqir == 0.10.7",
 ]
 
 [project.optional-dependencies]
