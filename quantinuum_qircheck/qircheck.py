@@ -155,29 +155,33 @@ def validate_qir_base(qir_prog: pq.Module) -> None:
         return is_valid_call(instr, qir_prog.functions)
 
     if not isinstance(qir_prog.functions, list):
-        raise ValueError(
-            "Expected the QIR file to have at least one function but none was found"
-        )
+        raise ValueError("Expected the QIR file to have at least one function but none was found")
     main_fun = next(filter(pq.is_entry_point, qir_prog.functions), None)
     if not main_fun:
-        raise ValueError(
-            "Expected the QIR file to have an entrypoint function " "but none was found"
-        )
+        raise ValueError("Expected the QIR file to have an entrypoint function but none was found")
     num_qubits = pq.required_num_qubits(main_fun)
     if not isinstance(num_qubits, int):
-        raise ValueError(
-            "Expected the QIR file to have qubit count specified "
-            "but no annotation was found"
-        )
+        raise ValueError("Expected the QIR file to have qubit count specified but no annotation was found")
     num_results = pq.required_num_results(main_fun)
     if not isinstance(num_results, int):
-        raise ValueError(
-            "Expected the QIR file to have measurement result count "
-            "specified but no annotation was found"
-        )
+        raise ValueError("Expected the QIR file to have measurement result count specified but no annotation was found")
+
+    # check for loops in CFG:
+
+    known_blocks_set = set()
+
+    for x in main_fun.basic_blocks:
+        known_blocks_set.add(x)
+
+        for instr in x.instructions:
+            if instr.opcode == pq.Opcode.BR:
+                for y in instr.successors:
+                    if y in known_blocks_set:
+                        raise ValidationError(0, "Found loop in CFG")
 
     line_num = 1
     i1_env: dict[str, pq.Call] = {}
+
     for block in main_fun.basic_blocks:
         for instr in block.instructions:
             if instr.opcode == pq.Opcode.BR:
@@ -240,9 +244,7 @@ def is_valid_quantum_call(instr: pq.Call) -> bool:
     special_gate_funs = [is_barrier, is_order, is_group]
     if isinstance(instr, pq.Call):
         fun_name = instr.callee.name
-        return (fun_name in quantum_instr_set) or any(
-            fun(fun_name) for fun in special_gate_funs
-        )
+        return (fun_name in quantum_instr_set) or any(fun(fun_name) for fun in special_gate_funs)
 
 
 def is_valid_classical_call(instr: pq.Call) -> bool:
@@ -281,11 +283,7 @@ def is_ret_instr(instr: pq.Instruction) -> bool:
 
 
 def is_jump_instr(instr: pq.Instruction) -> bool:
-    return (
-        isinstance(instr, pq.Instruction)
-        and instr.opcode == pq.Opcode.BR
-        and len(instr.operands) == 1
-    )
+    return isinstance(instr, pq.Instruction) and instr.opcode == pq.Opcode.BR and len(instr.operands) == 1
 
 
 def is_valid_read_result_instr(instr: pq.Instruction) -> bool:

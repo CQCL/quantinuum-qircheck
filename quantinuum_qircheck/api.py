@@ -36,9 +36,7 @@ def qircheck(qir: Union[str, bytes, pyqir.Module]) -> None:
     elif isinstance(qir, pyqir.Module):
         module = qir
     else:
-        raise ValueError(
-            f"unexpected types. Expected str, bytes or pyqir.module. got : {type(qir)}"
-        )
+        raise ValueError(f"unexpected types. Expected str, bytes or pyqir.module. got : {type(qir)}")
 
     assert module.verify() is None
 
