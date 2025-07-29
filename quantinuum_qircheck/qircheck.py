@@ -185,7 +185,7 @@ def validate_qir_base(qir_prog: pq.Module) -> None:
             if instr.opcode == pq.Opcode.BR:
                 for y in instr.successors:
                     if y in known_blocks_set:
-                        raise ValidationError(0, "Found loop in CFG")
+                        raise ValidationError("Found loop in CFG", 0)
 
     line_num = 1
     i1_env: dict[str, pq.Call] = {}
