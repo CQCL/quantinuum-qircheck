@@ -182,7 +182,7 @@ def validate_qir_base(qir_prog: pq.Module) -> None:
         known_blocks_set.add(x)
 
         for instr in x.instructions:
-            if instr.opcode == pq.Opcode.BR:
+            if instr.opcode == pq.Opcode.BR or instr.opcode == pq.Opcode.INDIRECT_BR:
                 for y in instr.successors:
                     if y in known_blocks_set:
                         raise ValueError("Found loop in CFG")
