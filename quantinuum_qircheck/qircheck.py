@@ -28,11 +28,11 @@ class _cycle_check:
     def __init__(self) -> None:
         # gray nodes/blocks
         # marks all blocks that are currently traversed
-        self.current_blocks = set()
+        self.current_blocks: set[pq.BasicBlock] = set()
 
         # black nodes/blocks
         # marks all blocks that have been traversed
-        self.visited_blocks = set()
+        self.visited_blocks: set[pq.BasicBlock] = set()
 
     def check_for_cycles(self, block: pq.BasicBlock) -> None:
         # checks if the given block is part of a cycle in the CFG
