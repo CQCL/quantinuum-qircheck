@@ -25,7 +25,7 @@ import pyqir as pq
 class _cycle_check:
     # checks for cycles in the CFG
 
-    def __init__(self):
+    def __init__(self) -> None:
         # gray nodes/blocks
         # marks all blocks that are currently traversed
         self.current_blocks = set()
