@@ -176,16 +176,23 @@ def validate_qir_base(qir_prog: pq.Module) -> None:
 
     # check for loops in CFG:
 
-    known_blocks_set = set()
+    current_blocks = set()
+    visited_blocks = set()
 
-    for x in main_fun.basic_blocks:
-        known_blocks_set.add(x)
-
-        for instr in x.instructions:
+    def check_for_cycles(block: pq.BasicBlock) -> None:
+        current_blocks.add(block)
+        for instr in block.instructions:
             if instr.opcode == pq.Opcode.BR or instr.opcode == pq.Opcode.INDIRECT_BR:
-                for y in instr.successors:
-                    if y in known_blocks_set:
+                for x in instr.successors:
+                    if (x not in current_blocks) and (x not in visited_blocks):
+                        check_for_cycles(x)
+                    if x in current_blocks:
                         raise ValueError("Found loop in CFG")
+
+        current_blocks.remove(block)
+        visited_blocks.add(block)
+
+    check_for_cycles(main_fun.basic_blocks[0])
 
     line_num = 1
     i1_env: dict[str, pq.Call] = {}
