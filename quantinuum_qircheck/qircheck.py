@@ -22,6 +22,38 @@ from typing import Callable
 import pyqir as pq
 
 
+class _cycle_check:
+    # checks for cycles in the CFG
+
+    def __init__(self):
+        # gray nodes/blocks
+        # marks all blocks that are currently traversed
+        self.current_blocks = set()
+
+        # black nodes/blocks
+        # marks all blocks that have been traversed
+        self.visited_blocks = set()
+
+    def check_for_cycles(self, block: pq.BasicBlock) -> None:
+        # checks if the given block is part of a cycle in the CFG
+        # this implements a DFS search and it fails when a backedge is found
+
+        self.current_blocks.add(block)
+        # loop over all the adjacent blocks
+        for instr in block.instructions:
+            if instr.opcode == pq.Opcode.BR or instr.opcode == pq.Opcode.INDIRECT_BR:
+                for x in instr.successors:
+                    if (x not in self.current_blocks) and (
+                        x not in self.visited_blocks
+                    ):
+                        self.check_for_cycles(x)
+                    if x in self.current_blocks:
+                        raise ValueError("Found loop in CFG")
+
+        self.current_blocks.remove(block)
+        self.visited_blocks.add(block)
+
+
 def qubit_number_regex_builder(gate_name: str, greater_than_1: bool = False) -> str:
     lower_bound = 2 if greater_than_1 else 1
     return f"__quantum__qis__{gate_name}([{lower_bound}-9]|[1-4][0-9]|[5][0-8])__body"
@@ -176,23 +208,8 @@ def validate_qir_base(qir_prog: pq.Module) -> None:
 
     # check for loops in CFG:
 
-    current_blocks = set()
-    visited_blocks = set()
-
-    def check_for_cycles(block: pq.BasicBlock) -> None:
-        current_blocks.add(block)
-        for instr in block.instructions:
-            if instr.opcode == pq.Opcode.BR or instr.opcode == pq.Opcode.INDIRECT_BR:
-                for x in instr.successors:
-                    if (x not in current_blocks) and (x not in visited_blocks):
-                        check_for_cycles(x)
-                    if x in current_blocks:
-                        raise ValueError("Found loop in CFG")
-
-        current_blocks.remove(block)
-        visited_blocks.add(block)
-
-    check_for_cycles(main_fun.basic_blocks[0])
+    cc = _cycle_check()
+    cc.check_for_cycles(main_fun.basic_blocks[0])
 
     line_num = 1
     i1_env: dict[str, pq.Call] = {}
