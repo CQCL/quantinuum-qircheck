@@ -22,6 +22,43 @@ from typing import Callable
 import pyqir as pq
 
 
+class _cycle_check:
+    # checks for cycles in the CFG
+
+    def __init__(self) -> None:
+        # gray nodes/blocks
+        # marks all blocks that are currently traversed
+        self.current_blocks: set[pq.BasicBlock] = set()
+
+        # black nodes/blocks
+        # marks all blocks that have been traversed
+        self.visited_blocks: set[pq.BasicBlock] = set()
+
+    def check_for_cycles(self, block: pq.BasicBlock) -> None:
+        # checks if the given block is part of a cycle in the CFG
+        # this implements a DFS search and it fails when a back edge is found
+        # the current state of the search is depended on the nodes / blocks already visited,
+        # they are stored in self.current_blocks and self.visited_blocks.
+        # self.current_blocks contains the nodes / blocks which are currently traversed
+        # self.visited_blocks contains the nodes / blocks which have been traversed
+
+        self.current_blocks.add(block)
+        # loop over all the adjacent blocks
+        for instr in block.instructions:
+            if instr.opcode == pq.Opcode.BR or instr.opcode == pq.Opcode.INDIRECT_BR:
+                for x in instr.successors:
+                    if x in self.current_blocks:
+                        raise ValueError(
+                            f"Found loop in CFG containing the block: {x.name}"
+                        )
+
+                    if x not in self.visited_blocks:
+                        self.check_for_cycles(x)
+
+        self.current_blocks.remove(block)
+        self.visited_blocks.add(block)
+
+
 def qubit_number_regex_builder(gate_name: str, greater_than_1: bool = False) -> str:
     lower_bound = 2 if greater_than_1 else 1
     return f"__quantum__qis__{gate_name}([{lower_bound}-9]|[1-4][0-9]|[5][0-8])__body"
@@ -161,23 +198,27 @@ def validate_qir_base(qir_prog: pq.Module) -> None:
     main_fun = next(filter(pq.is_entry_point, qir_prog.functions), None)
     if not main_fun:
         raise ValueError(
-            "Expected the QIR file to have an entrypoint function " "but none was found"
+            "Expected the QIR file to have an entrypoint function but none was found"
         )
     num_qubits = pq.required_num_qubits(main_fun)
     if not isinstance(num_qubits, int):
         raise ValueError(
-            "Expected the QIR file to have qubit count specified "
-            "but no annotation was found"
+            "Expected the QIR file to have qubit count specified but no annotation was found"
         )
     num_results = pq.required_num_results(main_fun)
     if not isinstance(num_results, int):
         raise ValueError(
-            "Expected the QIR file to have measurement result count "
-            "specified but no annotation was found"
+            "Expected the QIR file to have measurement result count specified but no annotation was found"
         )
+
+    # check for loops in CFG:
+
+    cc = _cycle_check()
+    cc.check_for_cycles(main_fun.basic_blocks[0])
 
     line_num = 1
     i1_env: dict[str, pq.Call] = {}
+
     for block in main_fun.basic_blocks:
         for instr in block.instructions:
             if instr.opcode == pq.Opcode.BR:

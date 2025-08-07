@@ -22,7 +22,6 @@ import quantinuum_qircheck as qc
 
 def test_check_qir_fileset() -> None:
     for file in listdir("qir/valid"):
-
         with open(f"qir/valid/{file}") as f:
             qir_str = f.read()
 
@@ -31,7 +30,6 @@ def test_check_qir_fileset() -> None:
 
 def test_check_qir_invalid_fileset() -> None:
     for file in listdir("qir/invalid"):
-
         with open(f"qir/invalid/{file}") as f:
             qir_str = f.read()
 
@@ -40,3 +38,6 @@ def test_check_qir_invalid_fileset() -> None:
 
             if file == "invalid_1.ll":
                 assert "Qqis" in str(e)
+
+            if file == "invalid_2.ll":
+                assert "Found loop in CFG" in str(e)
