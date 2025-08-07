@@ -36,19 +36,24 @@ class _cycle_check:
 
     def check_for_cycles(self, block: pq.BasicBlock) -> None:
         # checks if the given block is part of a cycle in the CFG
-        # this implements a DFS search and it fails when a backedge is found
+        # this implements a DFS search and it fails when a back edge is found
+        # the current state of the search is depended on the nodes / blocks already visited,
+        # they are stored in self.current_blocks and self.visited_blocks.
+        # self.current_blocks contains the nodes / blocks which are currently traversed
+        # self.visited_blocks contains the nodes / blocks which have been traversed
 
         self.current_blocks.add(block)
         # loop over all the adjacent blocks
         for instr in block.instructions:
             if instr.opcode == pq.Opcode.BR or instr.opcode == pq.Opcode.INDIRECT_BR:
                 for x in instr.successors:
-                    if (x not in self.current_blocks) and (
-                        x not in self.visited_blocks
-                    ):
-                        self.check_for_cycles(x)
                     if x in self.current_blocks:
-                        raise ValueError("Found loop in CFG")
+                        raise ValueError(
+                            f"Found loop in CFG containing the block: {x.name}"
+                        )
+
+                    if x not in self.visited_blocks:
+                        self.check_for_cycles(x)
 
         self.current_blocks.remove(block)
         self.visited_blocks.add(block)
