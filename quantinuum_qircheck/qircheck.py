@@ -298,6 +298,11 @@ def is_valid_classical_call(instr: pq.Call) -> bool:
         "__quantum__rt__array_end_record_output",
         "__quantum__rt__tuple_record_output",
         "__quantum__rt__array_record_output",
+        "___get_current_shot",
+        "___set_random_index",
+        "___random_int",
+        "___random_int_bounded",
+        "___random_seed",
     }
     # for real support we should check an annotation instead of checking the name
     return instr.callee.name in classical_instr_set
